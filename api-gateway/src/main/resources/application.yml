@@ -34,10 +34,8 @@ spring:
               uri: lb://transaction-service
               predicates:
                 - Path=/api/transaction/**
-                - Path=/api/category/**
               filters:
                 - RewritePath=/api/transaction/(?<segment>.*), /api/transaction/${segment}
-                - RewritePath=/api/category/(?<segment>.*), /api/category/${segment}
 
             - id: financial-evaluations-service
               uri: lb://financial-evaluations-service

@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface FinancialSavingTargetRepository extends JpaRepository<FinancialSavingTarget, String> {
 
-    @Query(value = "SELECT * FROM tb_transaction WHERE deleted = false AND user_id = :userId AND plan_id = :planId AND target_id = :targetId " , nativeQuery = true)
+    @Query(value = "SELECT * FROM tb_financial_saving_target WHERE deleted = false AND user_id = :userId AND plan_id = :planId AND target_id = :targetId " , nativeQuery = true)
     Optional<FinancialSavingTarget> findByUserIdAndPlanIdAndTargetId(@Param("userId") String userId, @Param("planId") String planId, @Param("targetId") String targetId);
 
     @Query(value = "SELECT * FROM tb_financial_saving_target WHERE user_id = :userId AND plan_id = :planId AND target_id = :targetId AND deleted = true", nativeQuery = true)

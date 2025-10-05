@@ -33,23 +33,12 @@ public class AuthenticationFilter implements GlobalFilter {
                 path.startsWith("/api/financial-plan/v3/api-docs")||
                 path.startsWith("/api/financial-saving-targets/v3/api-docs")||
                 path.startsWith("/api/transaction/v3/api-docs") ||
+                path.startsWith("/api/financial-evaluations/v3/api-docs") ||
                 path.startsWith("/swagger-ui")) {
-
 
             ServerWebExchange mutatedExchange = exchange.mutate()
                     .request(r -> r.headers(headers -> headers.set("X-Internal-Token", "secret-key-123")))
                     .build();
-
-
-            logger.info("===================================");
-            logger.info("Process registration check : {}", path.startsWith("/api/auth/registration"));
-            logger.info("Process api-docs check : {}", path.startsWith("/api/auth/v3/api-docs"));
-            logger.info("financial-saving-target : {}", path.startsWith("/api/financial-saving-targets/v3/api-docs"));
-            logger.info("transaction : {}", path.startsWith("/api/transaction/v3/api-docs"));
-
-
-//            logger.info("registration check : {}", path.startsWith("/api/auth/registration"));
-
             return chain.filter(mutatedExchange);
         }
 

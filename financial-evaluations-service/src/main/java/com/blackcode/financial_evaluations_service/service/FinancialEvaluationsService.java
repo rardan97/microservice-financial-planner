@@ -6,9 +6,7 @@ import java.util.List;
 
 public interface FinancialEvaluationsService {
 
-    List<FinancialEvaluationsRes> getEvaluationsAll(String userId);
-
-    FinancialEvaluationsRes getTransactionByPlan(String userId, String planId);
+    FinancialEvaluationsRes getEvaluationsPlan(String userId, String planId);
 
     FinancialEvaluationsRes createEvaluationsPlan(String userId, String planId);
 }

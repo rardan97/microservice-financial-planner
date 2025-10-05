@@ -14,6 +14,4 @@ public class CategoryReq {
     private String categoryName;
 
     private String categoryType;
-
-    private String categoryUserId;
 }

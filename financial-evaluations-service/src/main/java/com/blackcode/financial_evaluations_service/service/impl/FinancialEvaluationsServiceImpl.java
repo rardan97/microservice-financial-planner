@@ -37,20 +37,13 @@ public class FinancialEvaluationsServiceImpl implements FinancialEvaluationsServ
         this.transactionClientService = transactionClientService;
     }
 
-    @Override
-    public List<FinancialEvaluationsRes> getEvaluationsAll(String userId) {
-        return null;
-    }
 
     @Override
-    public FinancialEvaluationsRes getTransactionByPlan(String userId, String planId) {
+    public FinancialEvaluationsRes getEvaluationsPlan(String userId, String planId) {
         FinancialEvaluations financialEvaluation = financialEvaluationsRepository.findByUserIdAndPlanId(userId, planId)
                 .orElseThrow(() -> new DataNotFoundException("FinancialPlan Not Found with id : "+planId));
 
         return mapToFinancialEvaluationsRes(financialEvaluation);
-
-
-
     }
 
     @Override

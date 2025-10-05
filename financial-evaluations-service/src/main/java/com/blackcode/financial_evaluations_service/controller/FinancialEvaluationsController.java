@@ -18,18 +18,6 @@ public class FinancialEvaluationsController {
         this.financialEvaluationsService = financialEvaluationsService;
     }
 
-    @GetMapping("/getEvaluationsAll")
-    public ResponseEntity<ApiResponse<List<FinancialEvaluationsRes>>> getEvaluationsAll(
-            @RequestHeader("X-User-Id") String userId,
-            @PathVariable("planId") String planId){
-
-        if (userId == null || userId.isEmpty()) {
-            return ResponseEntity.badRequest().body(ApiResponse.error("Missing X-User-Id header", 400));
-        }
-        List<FinancialEvaluationsRes> rtn = financialEvaluationsService.getEvaluationsAll(userId);
-        return ResponseEntity.ok(ApiResponse.success("FinancialPlan found",200, rtn));
-    }
-
     @GetMapping("/getEvaluationsPlan/{planId}")
     public ResponseEntity<ApiResponse<FinancialEvaluationsRes>> getEvaluationsPlan(
             @RequestHeader("X-User-Id") String userId,
@@ -38,8 +26,8 @@ public class FinancialEvaluationsController {
         if (userId == null || userId.isEmpty()) {
             return ResponseEntity.badRequest().body(ApiResponse.error("Missing X-User-Id header", 400));
         }
-        FinancialEvaluationsRes rtn = financialEvaluationsService.getTransactionByPlan(userId, planId);
-        return ResponseEntity.ok(ApiResponse.success("FinancialPlan found",200, rtn));
+        FinancialEvaluationsRes rtn = financialEvaluationsService.getEvaluationsPlan(userId, planId);
+        return ResponseEntity.ok(ApiResponse.success("getEvaluationsPlan found",200, rtn));
     }
 
     @PostMapping("/createEvaluationsPlan/{planId}")
@@ -51,6 +39,6 @@ public class FinancialEvaluationsController {
             return ResponseEntity.badRequest().body(ApiResponse.error("Missing X-User-Id header", 400));
         }
         FinancialEvaluationsRes rtn = financialEvaluationsService.createEvaluationsPlan(userId, planId);
-        return ResponseEntity.ok(ApiResponse.success("Success Create Transaction", 200, rtn));
+        return ResponseEntity.ok(ApiResponse.success("Success Create EvaluationsPlan", 200, rtn));
     }
 }
