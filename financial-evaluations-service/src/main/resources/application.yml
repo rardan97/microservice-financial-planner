@@ -1,0 +1,83 @@
+server:
+  port: 8085
+
+internal:
+  api:
+    secret: secret-key-123
+
+spring:
+  application:
+    name: financial-evaluations-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+    instances:
+      financialPlanService:
+        baseConfig: default
+      financialSavingTargetService:
+        baseConfig: default
+      transactionalService:
+        baseConfig: default
+
+  retry:
+    instances:
+      financialPlanService:
+        maxRetryAttempts: 3
+        waitDuration: 2s
+        retryExceptions:
+          - org.springframework.web.reactive.function.client.WebClientRequestException
+          - java.util.concurrent.TimeoutException
+      financialSavingTargetService:
+        maxRetryAttempts: 3
+        waitDuration: 2s
+        retryExceptions:
+          - org.springframework.web.reactive.function.client.WebClientRequestException
+          - java.util.concurrent.TimeoutException
+      transactionalService:
+        maxRetryAttempts: 3
+        waitDuration: 2s
+        retryExceptions:
+          - org.springframework.web.reactive.function.client.WebClientRequestException
+          - java.util.concurrent.TimeoutException
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,circuitbreakerevents
+
+springdoc:
+  api-docs:
+    path: /api/financial-evaluations-service/v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_DEFAULTZONE:http://eurekaserver:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+
+
+

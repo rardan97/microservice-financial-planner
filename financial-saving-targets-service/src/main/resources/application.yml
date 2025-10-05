@@ -1,0 +1,35 @@
+server:
+  port: 8083
+
+internal:
+  api:
+    secret: secret-key-123
+
+spring:
+  application:
+    name: financial-saving-targets-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+springdoc:
+  api-docs:
+    path: /api/financial-saving-targets/v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICE_DEFAULTZONE:http://eurekaserver:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true

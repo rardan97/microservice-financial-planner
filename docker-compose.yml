@@ -1,0 +1,286 @@
+version: '3.8'
+
+services:
+  eurekaserver:
+    build:
+      context: ./eureka-server
+    container_name: eurekaserver
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-auth-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: authdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata-auth:/var/lib/postgresql/data
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres-financialplan:
+    image: postgres:15
+    container_name: postgres-financial-plan-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: financialplandb
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata-financial-plan:/var/lib/postgresql/data
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  postgres-financialsavingtargets:
+    image: postgres:15
+    container_name: postgres-financial-saving-targets-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: financialsavingtargetsdb
+    ports:
+      - "5435:5432"
+    volumes:
+      - pgdata-financial-saving-targets:/var/lib/postgresql/data
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  postgres-transaction:
+    image: postgres:15
+    container_name: postgres-transaction-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: transactiondb
+    ports:
+      - "5436:5432"
+    volumes:
+      - pgdata-transaction:/var/lib/postgresql/data
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  postgres-financialevaluations:
+    image: postgres:15
+    container_name: postgres-financial-evaluations-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: financialevaluationsdb
+    ports:
+      - "5437:5432"
+    volumes:
+      - pgdata-financial-evaluations:/var/lib/postgresql/data
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  auth-service:
+    restart: unless-stopped
+    build:
+      context: ./auth-service
+    container_name: auth-service
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+      postgres-auth:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-auth:5432/authdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+
+      blackcode.app.jwtSecret: 5pAq6zRyX8bC3dV2wS7gN1mK9jF0hL4tUoP6iBvE3nG8xZaQrY7cW2fA
+      blackcode.app.jwtExpirationMs: 3600000
+      blackcode.app.jwtRefreshExpirationMs: 360000000
+
+    ports:
+      - "8081:8081"
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  financialplan-service:
+    restart: unless-stopped
+    build:
+      context: ./financial-plan-service
+    container_name: financial-plan-service
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+      postgres-financialplan:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-financialplan:5432/financialplandb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+    ports:
+      - "8082:8082"
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  financialsavingtargets-service:
+    restart: unless-stopped
+    build:
+      context: ./financial-saving-targets-service
+    container_name: financial-saving-targets-service
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+      postgres-financialsavingtargets:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-financialsavingtargets:5432/financialsavingtargetsdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+    ports:
+      - "8083:8083"
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  transaction-service:
+    restart: unless-stopped
+    build:
+      context: ./transaction-service
+    container_name: transaction-service
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+      postgres-transaction:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-transaction:5432/transactiondb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+    ports:
+      - "8084:8084"
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  financialevaluations-service:
+    restart: unless-stopped
+    build:
+      context: ./financial-evaluations-service
+    container_name: financial-evaluations-service
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+      postgres-financialevaluations:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-financialevaluations:5432/financialevaluationsdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+    ports:
+      - "8085:8085"
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  apigateway:
+    build:
+      context: ./api-gateway
+    container_name: api-gateway
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+      financialplan-service:
+        condition: service_started
+      financialsavingtargets-service:
+        condition: service_started
+      transaction-service:
+        condition: service_started
+      financialevaluations-service:
+        condition: service_started
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8761/eureka/
+      blackcode.app.jwtSecret: 5pAq6zRyX8bC3dV2wS7gN1mK9jF0hL4tUoP6iBvE3nG8xZaQrY7cW2fA
+      blackcode.app.jwtExpirationMs: 3600000
+      blackcode.app.jwtRefreshExpirationMs: 360000000
+    ports:
+      - "8080:8080"
+    networks:
+      - microservices-network-v1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  microservices-network-v1:
+    driver: bridge
+
+volumes:
+  pgdata-auth:
+  pgdata-financial-plan:
+  pgdata-financial-saving-targets:
+  pgdata-transaction:
+  pgdata-financial-evaluations:

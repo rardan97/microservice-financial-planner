@@ -1,0 +1,85 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/**
+              filters:
+                - RewritePath=/api/auth/(?<segment>.*), /api/auth/${segment}
+
+            - id: financial-plan-service
+              uri: lb://financial-plan-service
+              predicates:
+                - Path=/api/financial-plan/**
+              filters:
+                - RewritePath=/api/financial-plan/(?<segment>.*), /api/financial-plan/${segment}
+
+            - id: financial-saving-targets-service
+              uri: lb://financial-saving-targets-service
+              predicates:
+                - Path=/api/financial-saving-targets/**
+              filters:
+                - RewritePath=/api/financial-saving-targets/(?<segment>.*), /api/financial-saving-targets/${segment}
+
+            - id: transaction-service
+              uri: lb://transaction-service
+              predicates:
+                - Path=/api/transaction/**
+                - Path=/api/category/**
+              filters:
+                - RewritePath=/api/transaction/(?<segment>.*), /api/transaction/${segment}
+                - RewritePath=/api/category/(?<segment>.*), /api/category/${segment}
+
+            - id: financial-evaluations-service
+              uri: lb://financial-evaluations-service
+              predicates:
+                - Path=/api/financial-evaluations/**
+              filters:
+                - RewritePath=/api/financial-evaluations/(?<segment>.*), /api/financial-evaluations/${segment}
+
+springdoc:
+  swagger-ui:
+    urls:
+      - url: /api/auth/v3/api-docs
+        name: Auth Service
+
+      - url: /api/financial-plan/v3/api-docs
+        name: Financial Plan Service
+
+      - url: /api/financial-saving-targets/v3/api-docs
+        name: Financial Saving Targets Service
+
+      - url: /api/transaction/v3/api-docs
+        name: transaction Service
+
+      - url: /api/financial-evaluations/v3/api-docs
+        name: financial evaluations Service
+
+
+blackcode:
+  app:
+    jwtSecret: ${blackcode.app.jwtSecret}
+    jwtExpirationMs: ${blackcode.app.jwtExpirationMs}
+    jwtRefreshExpirationMs: ${blackcode.app.jwtRefreshExpirationMs}
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eurekaserver:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+
