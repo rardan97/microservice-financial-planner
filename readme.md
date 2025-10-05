@@ -35,7 +35,7 @@ Evaluasi otomatis setelah periode rencana selesai, menghitung selisih pemasukan-
 
 ## Architecture Diagram
 <p align="center">
-  <img src="architecture_flow.png" alt="Architecture Diagram" width="700"/>
+  <img src="flow.png" alt="Architecture Diagram" width="700"/>
 </p>
 
 
