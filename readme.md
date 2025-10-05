@@ -26,19 +26,26 @@ microservice-finance-planner adalah backend microservice untuk mengelola perenca
 
 
 ## Microservices Overview
-#### - api-gateway : Sebagai pintu gerbang utama untuk routing request ke service-service backend, mengelola otorisasi, load balancing, dan monitoring.
+#### api-gateway : 
+- Sebagai pintu gerbang utama untuk routing request ke service-service backend, mengelola otorisasi, load balancing, dan monitoring.
 
-#### - eureka-server : Bertugas sebagai service discovery, memungkinkan setiap service untuk menemukan dan berkomunikasi dengan service lainnya secara dinamis.
+#### eureka-server : 
+- Bertugas sebagai service discovery, memungkinkan setiap service untuk menemukan dan berkomunikasi dengan service lainnya secara dinamis.
 
-#### - auth-service : Mengelola autentikasi dan otorisasi pengguna, termasuk registrasi, login, logout, dan manajemen token JWT.
+#### auth-service : 
+- Mengelola autentikasi dan otorisasi pengguna, termasuk registrasi, login, logout, dan manajemen token JWT.
 
-#### - financial-plan-service : Menangani pembuatan, pengelolaan, dan penghapusan rencana keuangan bulanan pengguna.
+#### financial-plan-service : 
+- Menangani pembuatan, pengelolaan, dan penghapusan rencana keuangan bulanan pengguna.
 
-#### - transaction-service : Mengelola pencatatan dan pengelolaan transaksi pemasukan dan pengeluaran
+#### transaction-service : 
+- Mengelola pencatatan dan pengelolaan transaksi pemasukan dan pengeluaran
 
-#### - financial-saving-targets-service : Bertanggung jawab untuk menetapkan dan mengelola target tabungan spesifik pada tiap rencana keuangan.
+#### financial-saving-targets-service : 
+- Bertanggung jawab untuk menetapkan dan mengelola target tabungan spesifik pada tiap rencana keuangan.
 
-#### - financial-evaluation-service : Melakukan evaluasi otomatis terhadap capaian keuangan setelah periode rencana berjalan, menghitung selisih pemasukan-pengeluaran serta pencapaian target tabungan.
+#### financial-evaluation-service : 
+- Melakukan evaluasi otomatis terhadap capaian keuangan setelah periode rencana berjalan, menghitung selisih pemasukan-pengeluaran serta pencapaian target tabungan.
 
 
 ## Komunikasi Antar Service
