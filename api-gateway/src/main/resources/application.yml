@@ -44,6 +44,25 @@ spring:
               filters:
                 - RewritePath=/api/financial-evaluations/(?<segment>.*), /api/financial-evaluations/${segment}
 
+#      globalcors:
+#        corsConfigurations:
+#          '[/**]':
+#            allowedOrigins:
+#              - "http://localhost:5173"    # URL frontend Vite kamu
+#            allowedMethods:
+#              - GET
+#              - POST
+#              - PUT
+#              - DELETE
+#              - OPTIONS
+#            allowedHeaders:
+#              - Authorization
+#              - Content-Type
+#              - X-User-Id
+#              - X-Username
+#              - X-Internal-Token
+#            allowCredentials: true
+
 springdoc:
   swagger-ui:
     urls:
@@ -57,18 +76,16 @@ springdoc:
         name: Financial Saving Targets Service
 
       - url: /api/transaction/v3/api-docs
-        name: transaction Service
+        name: Transaction Service
 
       - url: /api/financial-evaluations/v3/api-docs
-        name: financial evaluations Service
-
+        name: Financial Evaluations Service
 
 blackcode:
   app:
     jwtSecret: ${blackcode.app.jwtSecret}
     jwtExpirationMs: ${blackcode.app.jwtExpirationMs}
     jwtRefreshExpirationMs: ${blackcode.app.jwtRefreshExpirationMs}
-
 
 logging:
   level:
@@ -80,4 +97,3 @@ eureka:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://eurekaserver:8761/eureka/}
     register-with-eureka: true
     fetch-registry: true
-

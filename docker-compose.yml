@@ -241,6 +241,29 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  
+  financialmanagament-fe:
+        build:
+            context: ./financial-managament-fe
+            dockerfile: Dockerfile
+        container_name: financial-managament-fe
+        ports:
+            - "5173:5173"
+        volumes:
+            - ./financial-managament-fe:/app
+            - /app/node_modules
+        command: npm run dev
+        stdin_open: true
+        tty: true
+        depends_on:
+            - apigateway
+        networks:
+            - microservices-network-v1
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost:5173"]
+          interval: 30s
+          timeout: 10s
+          retries: 3
 
   apigateway:
     build:

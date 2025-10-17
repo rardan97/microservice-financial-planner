@@ -1,6 +1,7 @@
 package com.blackcode.financial_plan_service.service;
 
 
+import com.blackcode.financial_plan_service.dto.DateReq;
 import com.blackcode.financial_plan_service.dto.FinancialPlanReq;
 import com.blackcode.financial_plan_service.dto.FinancialPlanRes;
 
@@ -18,5 +19,8 @@ public interface FinancialPlanService {
     FinancialPlanRes updateFinancialPlan(String userId, String planId, FinancialPlanReq financialPlanReq);
 
     Map<String, Object> deleteFinancialPlan(String userId, String planId);
+
+
+    List<FinancialPlanRes> getFinancePlanByDate(DateReq dateReq);
 
 }

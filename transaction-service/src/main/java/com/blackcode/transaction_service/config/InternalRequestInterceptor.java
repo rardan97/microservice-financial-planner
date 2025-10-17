@@ -17,6 +17,13 @@ public class InternalRequestInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        System.out.println("InternalRequestInterceptor: Checking token...");
+
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            System.out.println("============transaction-service: OPTION LOLOS");
+            return true;
+        }
+
         String headerSecret = request.getHeader("X-Internal-Token");
 
         if (!internalSecret.equals(headerSecret)) {

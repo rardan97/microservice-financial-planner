@@ -73,7 +73,6 @@ release.properties
 docker-compose.override.yml
 .docker/
 **/.dockerignore
-**/Dockerfile
 volumes/
 
 # macOS

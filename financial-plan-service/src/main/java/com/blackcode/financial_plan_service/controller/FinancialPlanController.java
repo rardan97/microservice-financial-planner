@@ -1,5 +1,6 @@
 package com.blackcode.financial_plan_service.controller;
 
+import com.blackcode.financial_plan_service.dto.DateReq;
 import com.blackcode.financial_plan_service.dto.FinancialPlanReq;
 import com.blackcode.financial_plan_service.dto.FinancialPlanRes;
 import com.blackcode.financial_plan_service.service.FinancialPlanService;
@@ -29,6 +30,14 @@ public class FinancialPlanController {
         }
         List<FinancialPlanRes> financialPlanRes = financialPlanService.getFinancialPlanAll(userId);
         return ResponseEntity.ok(ApiResponse.success("FinancialPlan found",200, financialPlanRes));
+    }
+
+    @PostMapping("/getFinancePlanByDate")
+    public ResponseEntity<ApiResponse<List<FinancialPlanRes>>> getFinancePlanByDate(
+            @RequestHeader("X-User-Id") String userId,
+            @RequestBody DateReq dateReq){
+        List<FinancialPlanRes> financialPlanRes = financialPlanService.getFinancePlanByDate(dateReq);
+        return ResponseEntity.ok(ApiResponse.success("FinancialPlan found Bas On Date : Success", 200, financialPlanRes));
     }
 
     @GetMapping("/getFinancialPlanById/{planId}")

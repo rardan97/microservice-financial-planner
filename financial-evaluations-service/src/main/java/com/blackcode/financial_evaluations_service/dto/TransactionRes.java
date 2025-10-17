@@ -21,7 +21,7 @@ public class TransactionRes {
 
     private Date transactionDate;
 
-    private String categories;
+    private CategoryRes categories;
 
     private String amount;
 

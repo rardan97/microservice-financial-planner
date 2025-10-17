@@ -22,7 +22,7 @@ public class WebClientConfig {
     @Qualifier("financialPlanService")
     public WebClient financialPlanWebClient(WebClient.Builder builder) {
         return builder
-                .baseUrl("lb://financial-saving-targets-service")
+                .baseUrl("lb://financial-plan-service")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }

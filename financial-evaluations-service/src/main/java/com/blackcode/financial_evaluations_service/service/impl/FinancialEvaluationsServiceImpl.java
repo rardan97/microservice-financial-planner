@@ -69,12 +69,12 @@ public class FinancialEvaluationsServiceImpl implements FinancialEvaluationsServ
         }
 
         BigDecimal totalIncome = transactionList.stream()
-                .filter(tx -> "PEMASUKAN".equalsIgnoreCase(tx.getCategories()))
+                .filter(tx -> "PEMASUKAN".equalsIgnoreCase(tx.getCategories().getCategoryType()))
                 .map(tx -> safeToBigDecimal(tx.getAmount()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal totalExpense = transactionList.stream()
-                .filter(tx -> "PENGELUARAN".equalsIgnoreCase(tx.getCategories()))
+                .filter(tx -> "PENGELUARAN".equalsIgnoreCase(tx.getCategories().getCategoryType()))
                 .map(tx -> safeToBigDecimal(tx.getAmount()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 

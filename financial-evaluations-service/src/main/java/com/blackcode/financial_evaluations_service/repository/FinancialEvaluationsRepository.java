@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface FinancialEvaluationsRepository extends JpaRepository<FinancialEvaluations, String> {
 
-    @Query(value = "SELECT * FROM tb_financial_evaluations WHERE AND user_id = :userId AND plan_id = :planId" , nativeQuery = true)
+    @Query(value = "SELECT * FROM tb_financial_evaluations WHERE user_id = :userId AND plan_id = :planId" , nativeQuery = true)
     Optional<FinancialEvaluations> findByUserIdAndPlanId(@Param("userId") String userId, @Param("planId") String planId);
 
 }

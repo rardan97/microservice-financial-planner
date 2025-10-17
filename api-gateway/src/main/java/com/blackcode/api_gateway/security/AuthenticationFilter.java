@@ -22,9 +22,18 @@ public class AuthenticationFilter implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-
+        logger.info("=========================Filter API===================");
         String path = exchange.getRequest().getURI().getPath();
+        String method = exchange.getRequest().getMethod().name();
         logger.info(path);
+
+        if ("OPTIONS".equalsIgnoreCase(exchange.getRequest().getMethod().name())) {
+            logger.info("=========================OPTION LOLOS===================");
+            return chain.filter(exchange);
+        }
+
+        logger.info("=========================OPTION TIDAK LOLOS===================");
+
 
         if (path.startsWith("/api/auth/registration") ||
                 path.startsWith("/api/auth/login") ||

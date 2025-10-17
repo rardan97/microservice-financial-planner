@@ -1,9 +1,6 @@
 package com.blackcode.financial_plan_service.service.impl;
 
-import com.blackcode.financial_plan_service.dto.FinancialPlanReq;
-import com.blackcode.financial_plan_service.dto.FinancialPlanRes;
-import com.blackcode.financial_plan_service.dto.SavingTargetRes;
-import com.blackcode.financial_plan_service.dto.TransactionRes;
+import com.blackcode.financial_plan_service.dto.*;
 import com.blackcode.financial_plan_service.exceptions.DataNotFoundException;
 import com.blackcode.financial_plan_service.exceptions.ServiceUnavailableException;
 import com.blackcode.financial_plan_service.model.FinancialPlan;
@@ -17,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -126,6 +125,34 @@ public class FinancialPlanServiceImpl implements FinancialPlanService {
         response.put("deletedPlanId", planId);
         response.put("info", "The Plan was removed from the database.");
         return response;
+    }
+
+    @Override
+    public List<FinancialPlanRes> getFinancePlanByDate(DateReq dateReq) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date utilDateStart = null;
+        Date utilDateEnd = null;
+        try {
+            utilDateStart = format.parse(dateReq.getDate_start());
+            utilDateEnd = format.parse(dateReq.getDate_end());
+        } catch (ParseException e) {
+            // Handle parsing error
+            e.printStackTrace();
+        }
+
+
+
+
+
+        List<FinancialPlan> financialPlanList = financialPlanRepository.getPlaneByDateStartAndDateEnd(utilDateStart, utilDateEnd);
+
+        if(financialPlanList.isEmpty()){
+            throw new DataNotFoundException("Data FinancialPlan Not Found");
+        }
+        return financialPlanList.stream()
+                .map(this::mapToFinancialPlanRes).toList();
+
     }
 
     private FinancialPlanRes mapToFinancialPlanDetailRes(FinancialPlan financialPlan, List<SavingTargetRes> savingTargetRes, List<TransactionRes> transactionRes){

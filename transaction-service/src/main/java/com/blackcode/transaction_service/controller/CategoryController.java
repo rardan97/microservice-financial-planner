@@ -3,6 +3,8 @@ package com.blackcode.transaction_service.controller;
 import com.blackcode.transaction_service.dto.*;
 import com.blackcode.transaction_service.service.CategoryService;
 import com.blackcode.transaction_service.utils.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/transaction/category")
 public class CategoryController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
     private final CategoryService categoryService;
 
@@ -22,6 +26,8 @@ public class CategoryController {
     @GetMapping("/getCategoryAll")
     public ResponseEntity<ApiResponse<List<CategoryRes>>> getCategoryAll(
             @RequestHeader("X-User-Id") String userId){
+
+        logger.info("=================== Proccess getCategoryAll");
 
         if (userId == null || userId.isEmpty()) {
             return ResponseEntity.badRequest().body(ApiResponse.error("Missing X-User-Id header", 400));
@@ -47,9 +53,12 @@ public class CategoryController {
             @RequestHeader("X-User-Id") String userId,
             @RequestBody CategoryReq categoryReq) {
 
+        logger.info("========>>>>>>> Process createCategory");
+
         if (userId == null || userId.isEmpty()) {
             return ResponseEntity.badRequest().body(ApiResponse.error("Missing X-User-Id header", 400));
         }
+
         CategoryRes rtn = categoryService.createCategory(userId, categoryReq);
         return ResponseEntity.ok(ApiResponse.success("Success Create Category", 200, rtn));
     }

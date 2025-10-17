@@ -23,6 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryRes> getCategoryAll(String userId) {
+        System.out.println("getCategoryAll => userId :"+userId);
         List<Category> category = categoryRepository.findCategoryByUserId(userId);
         return category.stream()
                 .map(this::mapToCategoryRes).toList();
@@ -42,7 +43,8 @@ public class CategoryServiceImpl implements CategoryService {
         category.setCategoryName(categoryReq.getCategoryName());
         category.setCategoryType(categoryReq.getCategoryType());
         category.setCategoryUserId(userId);
-        return mapToCategoryRes(category);
+        Category category1 = categoryRepository.save(category);
+        return mapToCategoryRes(category1);
     }
 
     @Override
@@ -51,7 +53,8 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new DataNotFoundException("Category Not Found with id : "+categoryId));
         category.setCategoryName(categoryReq.getCategoryName());
         category.setCategoryType(categoryReq.getCategoryType());
-        return mapToCategoryRes(category);
+        Category category1 = categoryRepository.save(category);
+        return mapToCategoryRes(category1);
     }
 
     @Override
